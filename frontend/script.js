@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:8000/api';
+// Dynamic API base URL - works for both local development and deployment
+const API_BASE_URL = window.location.origin + '/api';
 
 class ResumeApp {
     constructor() {
