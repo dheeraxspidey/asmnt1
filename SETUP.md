@@ -1,13 +1,11 @@
 # Quick Setup Guide
 
-## Option 1: Automated Setup (Recommended)
-
-### Prerequisites
+## Prerequisites
 - Python 3.8+
 - Google AI API Key (get from https://makersuite.google.com/app/apikey)
 - Cloud PostgreSQL database (already configured)
 
-### Steps
+## Setup Steps
 
 1. **Configure Environment**
    ```bash
@@ -16,32 +14,22 @@
    # Edit .env with your Google API key and database URL
    ```
 
-2. **Install Dependencies & Start**
+2. **Install Dependencies & Start Backend**
    ```bash
-   cd ..
-   ./start.sh
+   pip install -r requirements.txt
+   python main.py
    ```
 
-3. **Access Application**
+3. **Start Frontend (in new terminal)**
+   ```bash
+   cd frontend
+   python -m http.server 3000
+   ```
+
+4. **Access Application**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
-
-## Option 2: Manual Setup
-
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-python init_db.py
-python main.py
-```
-
-### Frontend
-```bash
-cd frontend
-python -m http.server 3000
-```
 
 ## Testing
 

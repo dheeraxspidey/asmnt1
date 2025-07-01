@@ -94,6 +94,11 @@ class ResumeApp {
     }
 
     displayResults(data) {
+        console.log('Frontend received data:', data);
+        console.log('Work experience in frontend:', data.work_experience);
+        console.log('Work experience type:', typeof data.work_experience);
+        console.log('Work experience length:', data.work_experience?.length);
+        
         // Personal Information
         document.getElementById('personalInfo').innerHTML = `
             <p><strong>Name:</strong> ${data.name || 'Not provided'}</p>

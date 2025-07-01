@@ -1,6 +1,7 @@
 import google.generativeai as genai
 from config import settings
 import json
+import os
 from typing import Dict, Any
 
 class ResumeAnalyzer:
@@ -10,42 +11,40 @@ class ResumeAnalyzer:
     
     def create_analysis_prompt(self, resume_text: str) -> str:
         return f"""
-Analyze the following resume text and extract information in STRICT JSON format. Return ONLY valid JSON without any additional text or markdown formatting.
+You are a resume analysis expert. Extract information from the following resume text and return ONLY a valid JSON object.
 
-You MUST return a FLAT JSON structure with ALL these exact field names:
-
+REQUIRED JSON FORMAT (return exactly this structure):
 {{
-  "name": "Full name of candidate",
-  "email": "Email address",
-  "phone": "Phone number", 
-  "linkedin": "LinkedIn URL",
-  "github": "GitHub URL",
-  "address": "Full address",
+  "name": "candidate full name",
+  "email": "email address",
+  "phone": "phone number", 
+  "linkedin": "LinkedIn URL or empty string",
+  "github": "GitHub URL or empty string",
+  "address": "full address or empty string",
   "core_skills": ["skill1", "skill2", "skill3"],
-  "soft_skills": ["soft1", "soft2"], 
-  "education": [{{"degree": "degree", "institution": "school", "year": "year", "gpa": "gpa"}}],
-  "work_experience": [{{"company": "company", "position": "role", "duration": "period", "description": "desc"}}],
-  "projects": [{{"name": "project", "description": "desc", "technologies_used": ["tech1", "tech2"]}}],
-  "certifications": ["cert1", "cert2"],
-  "languages_known": ["lang1", "lang2"],
+  "soft_skills": ["communication", "leadership"], 
+  "education": [{{"degree": "degree name", "institution": "school name", "year": "graduation year", "gpa": "gpa if available"}}],
+  "work_experience": [{{"company": "company name", "position": "job title", "duration": "employment period", "description": "job responsibilities and achievements"}}],
+  "projects": [{{"name": "project name", "description": "project description", "technologies_used": ["tech1", "tech2"]}}],
+  "certifications": ["certification1", "certification2"],
+  "languages_known": ["English", "Spanish"],
   "hobbies": ["hobby1", "hobby2"],
-  "resume_rating": "8/10",
-  "improvement_areas": ["Add more metrics", "Include keywords", "Better formatting"],
-  "upskill_suggestions": ["Cloud computing", "Advanced Python", "Project management"]
+  "resume_rating": "X/10",
+  "improvement_areas": ["area1", "area2", "area3"],
+  "upskill_suggestions": ["suggestion1", "suggestion2", "suggestion3"]
 }}
 
-CRITICAL REQUIREMENTS:
-1. Return FLAT JSON structure - NO nested categories
-2. Use exact field names as shown above
-3. MUST provide resume_rating (e.g., "7/10", "8/10")
-4. MUST provide 3-5 improvement_areas 
-5. MUST provide 3-5 upskill_suggestions
-6. If field not found, use empty string "" or empty array []
+CRITICAL INSTRUCTIONS:
+1. Return ONLY the JSON object - no other text, no markdown, no explanations
+2. For work_experience: Look for ANY employment history including jobs, internships, work experience, professional experience, career history
+3. Extract ALL work positions found in the resume 
+4. If no work experience found, use empty array: []
+5. For missing fields, use empty string "" or empty array []
+6. Provide realistic resume_rating from 1-10
+7. Give 3-5 improvement_areas and upskill_suggestions
 
 Resume Text:
 {resume_text}
-
-Return ONLY the flat JSON object:
 """
 
     def analyze_resume(self, resume_text: str) -> Dict[str, Any]:
@@ -63,7 +62,32 @@ Return ONLY the flat JSON object:
             
             # Clean response text
             response_text = response.text.strip()
-            print(f"Raw Gemini response: {response_text[:500]}...")  # Debug print
+            print(f"Raw Gemini response length: {len(response_text)}")  # Debug print
+            
+            # Write full response to a file for debugging
+            try:
+                # Save in sample_data directory
+                debug_file_path = '../sample_data/gemini_raw_response.json'
+                os.makedirs(os.path.dirname(debug_file_path), exist_ok=True)
+                with open(debug_file_path, 'w') as f:
+                    f.write(response_text)
+                print(f"Full response written to {debug_file_path}")
+                print(f"File exists: {os.path.exists(debug_file_path)}")
+            except Exception as e:
+                print(f"Error writing debug file: {e}")
+                # Try alternative location in current directory
+                try:
+                    debug_file_path = './gemini_response.json'
+                    with open(debug_file_path, 'w') as f:
+                        f.write(response_text)
+                    print(f"Full response written to {debug_file_path}")
+                except Exception as e2:
+                    print(f"Error writing to alternative location: {e2}")
+            
+            # Also print first part of response for immediate debugging
+            print(f"Response preview (first 500 chars): {response_text[:500]}")
+            print(f"Response preview (middle 500 chars): {response_text[500:1000]}")
+            print(f"Response preview (last 500 chars): {response_text[-500:]}")
             
             # Remove markdown formatting if present
             if response_text.startswith("```json"):
@@ -75,6 +99,27 @@ Return ONLY the flat JSON object:
             
             # Parse JSON
             parsed_data = json.loads(response_text)
+            
+            # Ensure work_experience is properly formatted
+            if 'work_experience' in parsed_data:
+                work_exp = parsed_data['work_experience']
+                if isinstance(work_exp, str) or not isinstance(work_exp, list):
+                    parsed_data['work_experience'] = []
+                else:
+                    # Ensure each item in the list is a proper dict
+                    formatted_work_exp = []
+                    for exp in work_exp:
+                        if isinstance(exp, dict):
+                            formatted_exp = {
+                                'company': exp.get('company', ''),
+                                'position': exp.get('position', ''),
+                                'duration': exp.get('duration', ''),
+                                'description': exp.get('description', '')
+                            }
+                            formatted_work_exp.append(formatted_exp)
+                    parsed_data['work_experience'] = formatted_work_exp
+            else:
+                parsed_data['work_experience'] = []
             
             # Check if data is nested and flatten it
             if "PERSONAL INFORMATION" in parsed_data or "SKILLS & EXPERIENCE" in parsed_data:
@@ -120,6 +165,10 @@ Return ONLY the flat JSON object:
             for key, default_value in default_data.items():
                 if key not in parsed_data:
                     parsed_data[key] = default_value
+                    
+            # Ensure work_experience is not None or invalid
+            if not parsed_data.get('work_experience') or not isinstance(parsed_data['work_experience'], list):
+                parsed_data['work_experience'] = []
             
             print(f"Parsed data rating: {parsed_data.get('resume_rating')}")  # Debug print
             print(f"Improvement areas: {parsed_data.get('improvement_areas')}")  # Debug print

@@ -42,6 +42,9 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
         # Analyze resume using Gemini
         analysis_result = resume_analyzer.analyze_resume(extracted_text)
         
+        # Debug: Print work experience data
+        print(f"Analysis result work_experience: {analysis_result.get('work_experience')}")
+        
         # Create resume record
         resume = Resume(
             file_name=file.filename,
@@ -53,13 +56,21 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
         db.commit()
         db.refresh(resume)
         
+        # Debug: Print saved work experience data
+        print(f"Saved work_experience: {resume.work_experience}")
+        
         # Return structured response
-        return {
+        response_data = {
             "id": resume.id,
             "file_name": resume.file_name,
             "upload_date": resume.upload_date,
             **analysis_result
         }
+        
+        # Debug: Print response work experience
+        print(f"Response work_experience: {response_data.get('work_experience')}")
+        
+        return response_data
         
     except Exception as e:
         # Clean up file if error occurs
