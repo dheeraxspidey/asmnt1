@@ -1,24 +1,10 @@
-import fitz  # PyMuPDF
 import pdfplumber
 from docx import Document
 import os
 from typing import Optional
 
-def extract_text_from_pdf_pymupdf(file_path: str) -> str:
-    """Extract text from PDF using PyMuPDF"""
-    try:
-        doc = fitz.open(file_path)
-        text = ""
-        for page in doc:
-            text += page.get_text()
-        doc.close()
-        return text.strip()
-    except Exception as e:
-        print(f"Error extracting text with PyMuPDF: {e}")
-        return ""
-
 def extract_text_from_pdf_pdfplumber(file_path: str) -> str:
-    """Extract text from PDF using pdfplumber (fallback)"""
+    """Extract text from PDF using pdfplumber"""
     try:
         text = ""
         with pdfplumber.open(file_path) as pdf:
@@ -51,10 +37,8 @@ def extract_text_from_file(file_path: str) -> Optional[str]:
     file_extension = os.path.splitext(file_path)[1].lower()
     
     if file_extension == '.pdf':
-        # Try PyMuPDF first, fallback to pdfplumber
-        text = extract_text_from_pdf_pymupdf(file_path)
-        if not text:
-            text = extract_text_from_pdf_pdfplumber(file_path)
+        # Use pdfplumber only (no PyMuPDF)
+        text = extract_text_from_pdf_pdfplumber(file_path)
         return text if text else None
     
     elif file_extension in ['.docx', '.doc']:
@@ -62,3 +46,16 @@ def extract_text_from_file(file_path: str) -> Optional[str]:
     
     else:
         return None
+
+class DocumentParser:
+    """Unified document parser class for deployment compatibility"""
+    
+    def __init__(self):
+        pass
+    
+    def extract_text(self, file_path: str) -> str:
+        """Extract text from PDF or DOCX file using deployment-friendly libraries"""
+        result = extract_text_from_file(file_path)
+        if result is None:
+            raise ValueError(f"Could not extract text from {file_path}")
+        return result

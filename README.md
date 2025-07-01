@@ -26,6 +26,28 @@ A full-stack application that analyzes resumes using AI (Google Gemini) and prov
 - **Bootstrap 5**: Responsive UI framework
 - **Font Awesome**: Icons
 
+## 🚀 Quick Start
+
+### Simple 3-Command Setup
+```bash
+# 1. Setup virtual environment and install dependencies
+python -m venv venv && source venv/bin/activate && pip install -r backend/requirements.txt
+
+# 2. Configure environment and start backend
+cd backend && cp .env.example .env
+# Edit .env with your Google API key, then:
+python main.py
+
+# 3. Start frontend (in new terminal)
+cd frontend && python -m http.server 3000
+# Or open index.html with live server extension
+```
+
+**That's it!** Access your app at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -33,7 +55,7 @@ A full-stack application that analyzes resumes using AI (Google Gemini) and prov
 - Google AI API key (Gemini)
 - Cloud PostgreSQL database (pre-configured)
 
-### Backend Setup
+### Detailed Setup
 
 1. **Clone and navigate to backend directory**
    ```bash
@@ -192,6 +214,33 @@ To extend the application:
 3. **Modify database schema**: Update `models.py` and create migrations
 4. **Enhance frontend**: Modify `script.js` and add new UI components
 
+## Manual Development Setup
+
+### Backend Only:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+```
+
+### Frontend Only:
+```bash
+cd frontend
+python -m http.server 3000
+# Or use live server extension in VS Code
+```
+
+### Manual (Advanced):
+```bash
+# Backend
+cd backend && python main.py &
+
+# Frontend  
+cd frontend && python -m http.server 3000
+```
+
 ## Troubleshooting
 
 **Common Issues:**
@@ -200,6 +249,23 @@ To extend the application:
 2. **Gemini API errors**: Verify API key is valid and has quota
 3. **File upload errors**: Ensure `sample_data` directory exists and is writable
 4. **CORS errors**: Check backend is running on expected port (8000)
+5. **Port conflicts**: The startup script will automatically find available ports
+
+## Application Screenshots
+
+Here are some screenshots showcasing the Resume Intelligence Application:
+
+### Resume Upload Interface
+![Resume Upload Interface](/screenshots/Screenshot%20from%202025-07-01%2016-39-00.png)
+*Main interface for uploading and analyzing resume files*
+
+### Resume Analysis Results
+![Resume Analysis Results](/screenshots/Screenshot%20from%202025-07-01%2017-29-31.png)
+*Detailed analysis showing extracted information and AI insights*
+
+### Resume History View
+![Resume History View](/screenshots/Screenshot%20from%202025-07-01%2017-32-04.png)
+*View of previously uploaded resumes with options to see details or delete*
 
 ## License
 
