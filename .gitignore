@@ -4,12 +4,13 @@
 *.pyo
 
 # Virtual environments
+venv/
+.venv/
 **/venv/
 **/.venv/
 
 # Environment variables
 .env
-
 
 # Debug files
 gemini_raw_response.json
