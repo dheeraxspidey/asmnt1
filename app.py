@@ -8,9 +8,9 @@ import os
 import sys
 from pathlib import Path
 
-# Add the current directory to Python path so we can import from backend
-sys.path.insert(0, str(Path(__file__).parent))
-sys.path.insert(0, str(Path(__file__).parent / "backend"))
+# Add backend directory to Python path
+backend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend')
+sys.path.insert(0, backend_path)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,8 +18,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 # Import backend modules
-from backend.routes.resume_routes import router as resume_router
-from backend.models import create_tables
+from routes.resume_routes import router as resume_router
+from models import create_tables
 
 app = FastAPI(title="Resume Intelligence API", version="1.0.0")
 
@@ -55,4 +55,4 @@ def startup_event():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("app:app", host="0.0.0.0", port=port)
