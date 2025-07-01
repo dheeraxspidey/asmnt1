@@ -1,6 +1,6 @@
 # Quick Setup Guide
 
-## Option 1: Automated Setup (Recommended)
+## 🚀 One-Command Start (All Operating Systems)
 
 ### Prerequisites
 - Python 3.8+
@@ -16,10 +16,10 @@
    # Edit .env with your Google API key and database URL
    ```
 
-2. **Install Dependencies & Start**
+2. **Start Application**
    ```bash
    cd ..
-   ./start.sh
+   python start.py
    ```
 
 3. **Access Application**
@@ -27,7 +27,18 @@
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
 
-## Option 2: Manual Setup
+## Alternative Startup Methods
+
+### Windows Users:
+```cmd
+# Command Prompt
+start.bat
+
+# PowerShell
+.\start.ps1
+```
+
+### Manual Setup (Advanced Users)
 
 ### Backend
 ```bash

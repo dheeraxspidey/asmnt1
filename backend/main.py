@@ -27,4 +27,19 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import socket
+    
+    # Function to find available port
+    def find_free_port(start_port=8000):
+        for port in range(start_port, start_port + 10):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                try:
+                    s.bind(('localhost', port))
+                    return port
+                except OSError:
+                    continue
+        return start_port
+    
+    port = find_free_port(8000)
+    print(f"🚀 Starting server on port {port}")
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -26,6 +26,23 @@ A full-stack application that analyzes resumes using AI (Google Gemini) and prov
 - **Bootstrap 5**: Responsive UI framework
 - **Font Awesome**: Icons
 
+## 🚀 Quick Start
+
+### One-Command Setup (All Operating Systems)
+```bash
+# 1. Configure your API key
+cd backend && cp .env.example .env
+# Edit .env with your Google API key
+
+# 2. Start the application
+cd .. && python start.py
+```
+
+**That's it!** Access your app at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -33,7 +50,7 @@ A full-stack application that analyzes resumes using AI (Google Gemini) and prov
 - Google AI API key (Gemini)
 - Cloud PostgreSQL database (pre-configured)
 
-### Backend Setup
+### Detailed Setup
 
 1. **Clone and navigate to backend directory**
    ```bash
@@ -192,6 +209,31 @@ To extend the application:
 3. **Modify database schema**: Update `models.py` and create migrations
 4. **Enhance frontend**: Modify `script.js` and add new UI components
 
+## Alternative Startup Methods
+
+### Cross-Platform (Recommended):
+```bash
+python start.py
+```
+
+### Windows:
+```cmd
+# Command Prompt
+start.bat
+
+# PowerShell  
+.\start.ps1
+```
+
+### Manual (Advanced):
+```bash
+# Backend
+cd backend && python main.py &
+
+# Frontend  
+cd frontend && python -m http.server 3000
+```
+
 ## Troubleshooting
 
 **Common Issues:**
@@ -200,6 +242,7 @@ To extend the application:
 2. **Gemini API errors**: Verify API key is valid and has quota
 3. **File upload errors**: Ensure `sample_data` directory exists and is writable
 4. **CORS errors**: Check backend is running on expected port (8000)
+5. **Port conflicts**: The startup script will automatically find available ports
 
 ## License
 
