@@ -1,0 +1,11 @@
+{
+  "name": "resume-intelligence-app",
+  "version": "1.0.0",
+  "description": "AI-powered resume analysis application",
+  "scripts": {
+    "start": "python app.py"
+  },
+  "engines": {
+    "python": "^3.11.0"
+  }
+}
