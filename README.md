@@ -1,272 +1,100 @@
-# Resume Intelligence Application
+# Resume Intelligence App
 
-A full-stack application that analyzes resumes using AI (Google Gemini) and provides intelligent insights including resume rating, improvement suggestions, and skill recommendations.
+A simple application that helps you analyze resumes using AI. Upload your resume, and get insights on how to improve it.
 
-## Features
+## What It Does
 
-- **Resume Upload & Analysis**: Upload PDF/DOCX resumes for automatic parsing and AI analysis
-- **Structured Data Extraction**: Extract personal info, education, experience, projects, and skills
-- **AI-Powered Insights**: Get resume ratings, improvement areas, and upskilling suggestions via Google Gemini
-- **Resume History**: View and manage previously uploaded resumes
-- **Responsive UI**: Clean, modern interface with detailed modal views
-- **RESTful API**: FastAPI backend with PostgreSQL database
+- Upload your resume (PDF or DOCX)
+- See information extracted from your resume
+- Get AI-powered feedback on how to improve it
+- View your previously uploaded resumes
 
-## Tech Stack
+## How to Run
 
-### Backend
-- **FastAPI**: Modern Python web framework
-- **PostgreSQL**: Database for storing resume data
-- **SQLAlchemy**: ORM for database operations
-- **LangChain + Google Gemini**: AI analysis and structured data extraction
-- **PyMuPDF & pdfplumber**: PDF text extraction
-- **python-docx**: DOCX text extraction
+You only need three simple commands to get the app running:
 
-### Frontend
-- **HTML5/CSS3/JavaScript**: Vanilla frontend with Bootstrap
-- **Bootstrap 5**: Responsive UI framework
-- **Font Awesome**: Icons
-
-## 🚀 Quick Start
-
-### Simple 3-Command Setup
 ```bash
-# 1. Setup virtual environment and install dependencies
+# 1. Set up your environment
 python -m venv venv && source venv/bin/activate && pip install -r backend/requirements.txt
 
-# 2. Configure environment and start backend
+# 2. Start the backend server
 cd backend && cp .env.example .env
-# Edit .env with your Google API key, then:
+# Edit .env file to add your Google API key
 python main.py
 
-# 3. Start frontend (in new terminal)
+# 3. Start the frontend (in a new terminal)
 cd frontend && python -m http.server 3000
-# Or open index.html with live server extension
 ```
 
-**That's it!** Access your app at:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
+Then just open http://localhost:3000 in your browser!
 
-## Setup Instructions
+### What You'll Need
 
-### Prerequisites
-- Python 3.8+
-- Google AI API key (Gemini)
-- Cloud PostgreSQL database (pre-configured)
+- Python 3.8 or newer
+- A Google Gemini API key (get one at https://makersuite.google.com/app/apikey)
+- The database is already configured for you
 
-### Detailed Setup
+### For Windows Users
 
-1. **Clone and navigate to backend directory**
-   ```bash
-   cd backend
-   ```
+If you're on Windows, use these commands instead:
 
-2. **Install Python dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your settings:
-   # GOOGLE_API_KEY=your_gemini_api_key
-   # DATABASE_URL=your_cloud_postgresql_url
-   ```
-
-4. **Run the backend server**
-   ```bash
-   python main.py
-   ```
-   
-   The API will be available at `http://localhost:8000`
-
-### Frontend Setup
-
-1. **Navigate to frontend directory**
-   ```bash
-   cd frontend
-   ```
-
-2. **Serve the frontend**
-   
-   Option A - Using Python's built-in server:
-   ```bash
-   python -m http.server 3000
-   ```
-   
-   Option B - Using Node.js live-server:
-   ```bash
-   npx live-server --port=3000
-   ```
-   
-   Option C - Open directly in browser:
-   ```bash
-   open index.html
-   ```
-
-3. **Access the application**
-   
-   Visit `http://localhost:3000` in your browser
-
-### Database Setup
-
-The application will automatically create the required tables on first run. The database schema includes:
-
-- **resumes** table with columns for:
-  - Personal information (name, email, phone, etc.)
-  - Skills (core_skills, soft_skills as JSON)
-  - Education, work experience, projects (as JSON arrays)
-  - AI analysis results (rating, improvement areas, suggestions)
-
-## API Endpoints
-
-### POST `/api/upload_resume`
-Upload and analyze a resume file
-- **Input**: Multipart form data with file
-- **Output**: Structured resume data with AI analysis
-
-### GET `/api/resumes`
-Get list of all uploaded resumes
-- **Output**: Array of resume summaries
-
-### GET `/api/resume/{id}`
-Get detailed information for a specific resume
-- **Output**: Complete resume data including AI analysis
-
-### DELETE `/api/resume/{id}`
-Delete a resume record
-- **Output**: Success confirmation
-
-## File Structure
-
-```
-├── backend/
-│   ├── main.py                 # FastAPI application entry point
-│   ├── config.py              # Application configuration
-│   ├── models.py              # SQLAlchemy database models
-│   ├── requirements.txt       # Python dependencies
-│   ├── .env.example          # Environment variables template
-│   ├── routes/
-│   │   └── resume_routes.py   # API route handlers
-│   ├── services/
-│   │   └── resume_analyzer.py # LangChain + Gemini integration
-│   └── utils/
-│       └── pdf_parser.py      # PDF/DOCX text extraction
-├── frontend/
-│   ├── index.html            # Main HTML file
-│   ├── styles.css            # Custom styles
-│   └── script.js             # Frontend JavaScript logic
-├── sample_data/              # Directory for uploaded resume files
-└── README.md                 # This file
-```
-
-## Usage
-
-1. **Upload Resume**: 
-   - Go to "Upload Resume" tab
-   - Drag and drop or click to select PDF/DOCX file
-   - View parsed information and AI analysis
-
-2. **View History**:
-   - Go to "Resume History" tab
-   - See table of all uploaded resumes
-   - Click "Details" to view full analysis in modal
-   - Click "Delete" to remove resume
-
-3. **AI Analysis**:
-   - Each resume gets a rating (X/10)
-   - Improvement areas are highlighted
-   - Upskilling suggestions provided
-   - All insights powered by Google Gemini
-
-## Environment Variables
-
-Create a `.env` file in the backend directory:
-
-```env
-GOOGLE_API_KEY=your_gemini_api_key_here
-DATABASE_URL=postgresql://username:password@localhost:5432/resume_db
-UPLOAD_DIR=../sample_data
-```
-
-## Error Handling
-
-- Invalid file types are rejected
-- Database connection errors are handled gracefully
-- AI analysis failures fall back to default structure
-- Frontend displays user-friendly error messages
-
-## Security Considerations
-
-- File uploads are validated by type
-- Database uses parameterized queries via SQLAlchemy
-- CORS is configured for cross-origin requests
-- Uploaded files are stored securely in designated directory
-
-## Development
-
-To extend the application:
-
-1. **Add new AI analysis features**: Modify `resume_analyzer.py`
-2. **Add new API endpoints**: Create routes in `resume_routes.py`
-3. **Modify database schema**: Update `models.py` and create migrations
-4. **Enhance frontend**: Modify `script.js` and add new UI components
-
-## Manual Development Setup
-
-### Backend Only:
-```bash
-cd backend
+Command Prompt:
+```cmd
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python main.py
+venv\Scripts\activate
+pip install -r backend/requirements.txt
+cd backend && python main.py
 ```
 
-### Frontend Only:
+PowerShell:
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r backend/requirements.txt
+cd backend; python main.py
+```
+
+Remember to start the frontend in a separate terminal with:
 ```bash
 cd frontend
 python -m http.server 3000
-# Or use live server extension in VS Code
 ```
 
-### Manual (Advanced):
-```bash
-# Backend
-cd backend && python main.py &
+## Using the App
 
-# Frontend  
-cd frontend && python -m http.server 3000
-```
+Once the app is running:
 
-## Troubleshooting
+1. **Upload a Resume**
+   - Click the "Upload Resume" tab
+   - Drag and drop your PDF or DOCX file
+   - Wait a few seconds for the AI analysis
 
-**Common Issues:**
+2. **View Your Resume History**
+   - Click the "Resume History" tab
+   - See all your past uploads
+   - Click "Details" on any resume to see the full analysis
 
-1. **Database connection errors**: Check cloud PostgreSQL credentials are correct in .env
-2. **Gemini API errors**: Verify API key is valid and has quota
-3. **File upload errors**: Ensure `sample_data` directory exists and is writable
-4. **CORS errors**: Check backend is running on expected port (8000)
-5. **Port conflicts**: The startup script will automatically find available ports
+## Troubleshooting Tips
 
-## Application Screenshots
+Having problems? Try these quick fixes:
 
-Here are some screenshots showcasing the Resume Intelligence Application:
+- Make sure you added your Google API key to the `.env` file
+- Check that both the frontend and backend are running
+- If uploads fail, make sure the `sample_data` directory exists
+- For database connection errors, check your PostgreSQL credentials in the `.env` file
+- If you get Gemini API errors, verify your API key is valid and has quota
+- For CORS errors, check that the backend is running on port 8000
 
-### Resume Upload Interface
-![Resume Upload Interface](/screenshots/Screenshot%20from%202025-07-01%2016-39-00.png)
-*Main interface for uploading and analyzing resume files*
+## Screenshots
 
-### Resume Analysis Results
-![Resume Analysis Results](/screenshots/Screenshot%20from%202025-07-01%2017-29-31.png)
-*Detailed analysis showing extracted information and AI insights*
+### Upload Your Resume
+![Resume Upload Screen](/screenshots/Screenshot%20from%202025-07-01%2016-39-00.png)
+*Simple drag and drop interface for uploading your resume*
 
-### Resume History View
-![Resume History View](/screenshots/Screenshot%20from%202025-07-01%2017-32-04.png)
-*View of previously uploaded resumes with options to see details or delete*
+### See the Analysis
+![Resume Analysis](/screenshots/Screenshot%20from%202025-07-01%2017-29-31.png)
+*Get helpful feedback on your resume*
 
-## License
-
-This project is for educational purposes.
+### View Your History
+![Resume History](/screenshots/Screenshot%20from%202025-07-01%2017-32-04.png)
+*Access all your previously uploaded resumes*

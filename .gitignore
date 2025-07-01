@@ -1,25 +1,19 @@
 # Python cache files
-__pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
 
 # Virtual environments
-venv/
-.venv/
+**/venv/
+**/.venv/
 
 # Environment variables
 .env
 
-# Start script (auto-generated)
-start.sh
 
 # Debug files
 gemini_raw_response.json
 
 # IDE files
 .vscode/
-.idea/
 
-# OS files
-.DS_Store
-Thumbs.db
