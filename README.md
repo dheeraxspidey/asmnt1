@@ -28,14 +28,19 @@ A full-stack application that analyzes resumes using AI (Google Gemini) and prov
 
 ## 🚀 Quick Start
 
-### One-Command Setup (All Operating Systems)
+### Simple 3-Command Setup
 ```bash
-# 1. Configure your API key
-cd backend && cp .env.example .env
-# Edit .env with your Google API key
+# 1. Setup virtual environment and install dependencies
+python -m venv venv && source venv/bin/activate && pip install -r backend/requirements.txt
 
-# 2. Start the application
-cd .. && python start.py
+# 2. Configure environment and start backend
+cd backend && cp .env.example .env
+# Edit .env with your Google API key, then:
+python main.py
+
+# 3. Start frontend (in new terminal)
+cd frontend && python -m http.server 3000
+# Or open index.html with live server extension
 ```
 
 **That's it!** Access your app at:
@@ -209,20 +214,22 @@ To extend the application:
 3. **Modify database schema**: Update `models.py` and create migrations
 4. **Enhance frontend**: Modify `script.js` and add new UI components
 
-## Alternative Startup Methods
+## Manual Development Setup
 
-### Cross-Platform (Recommended):
+### Backend Only:
 ```bash
-python start.py
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
 ```
 
-### Windows:
-```cmd
-# Command Prompt
-start.bat
-
-# PowerShell  
-.\start.ps1
+### Frontend Only:
+```bash
+cd frontend
+python -m http.server 3000
+# Or use live server extension in VS Code
 ```
 
 ### Manual (Advanced):
