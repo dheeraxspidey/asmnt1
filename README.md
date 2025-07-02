@@ -88,6 +88,8 @@ Having problems? Try these quick fixes:
 ## Screenshots
 
 ### Upload Your Resume
+![Screenshot from 2025-07-01 20-55-01](https://github.com/user-attachments/assets/6b6acc74-380c-4b3c-b433-7bcd27e6f6c4)
+
 ![Resume Upload Screen](/screenshots/Screenshot%20from%202025-07-01%2016-39-00.png)
 *Simple drag and drop interface for uploading your resume*
 
