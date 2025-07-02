@@ -8,6 +8,7 @@ venv/
 
 # Environment variables
 .env
+**/.env
 
 # Debug files
 gemini_raw_response.json
