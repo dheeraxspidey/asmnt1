@@ -51,43 +51,14 @@ Resume Text:
         """Analyze resume text using Gemini and return structured data"""
         try:
             prompt = self.create_analysis_prompt(resume_text)
-            
-            # Use the direct Gemini API
             response = self.model.generate_content(prompt)
             
             # Check if response has text
             if not response.text:
-                print("No response text from Gemini")
                 return self._get_default_structure()
             
             # Clean response text
             response_text = response.text.strip()
-            print(f"Raw Gemini response length: {len(response_text)}")  # Debug print
-            
-            # Write full response to a file for debugging
-            try:
-                # Save in sample_data directory
-                debug_file_path = '../sample_data/gemini_raw_response.json'
-                os.makedirs(os.path.dirname(debug_file_path), exist_ok=True)
-                with open(debug_file_path, 'w') as f:
-                    f.write(response_text)
-                print(f"Full response written to {debug_file_path}")
-                print(f"File exists: {os.path.exists(debug_file_path)}")
-            except Exception as e:
-                print(f"Error writing debug file: {e}")
-                # Try alternative location in current directory
-                try:
-                    debug_file_path = './gemini_response.json'
-                    with open(debug_file_path, 'w') as f:
-                        f.write(response_text)
-                    print(f"Full response written to {debug_file_path}")
-                except Exception as e2:
-                    print(f"Error writing to alternative location: {e2}")
-            
-            # Also print first part of response for immediate debugging
-            print(f"Response preview (first 500 chars): {response_text[:500]}")
-            print(f"Response preview (middle 500 chars): {response_text[500:1000]}")
-            print(f"Response preview (last 500 chars): {response_text[-500:]}")
             
             # Remove markdown formatting if present
             if response_text.startswith("```json"):
@@ -97,7 +68,6 @@ Resume Text:
             
             response_text = response_text.strip()
             
-            # Parse JSON
             parsed_data = json.loads(response_text)
             
             # Ensure work_experience is properly formatted
@@ -123,7 +93,6 @@ Resume Text:
             
             # Check if data is nested and flatten it
             if "PERSONAL INFORMATION" in parsed_data or "SKILLS & EXPERIENCE" in parsed_data:
-                print("Detected nested structure, flattening...")
                 flattened_data = {}
                 
                 # Extract personal info
@@ -170,17 +139,11 @@ Resume Text:
             if not parsed_data.get('work_experience') or not isinstance(parsed_data['work_experience'], list):
                 parsed_data['work_experience'] = []
             
-            print(f"Parsed data rating: {parsed_data.get('resume_rating')}")  # Debug print
-            print(f"Improvement areas: {parsed_data.get('improvement_areas')}")  # Debug print
-            
             return parsed_data
             
         except json.JSONDecodeError as e:
-            print(f"JSON parsing error: {e}")
-            print(f"Raw response: {response_text}")
             return self._get_default_structure()
         except Exception as e:
-            print(f"Error analyzing resume: {e}")
             return self._get_default_structure()
     
     def _get_default_structure(self) -> Dict[str, Any]:
